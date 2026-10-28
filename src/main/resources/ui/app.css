@@ -1,0 +1,239 @@
+/* dev-expert · anti-slop: P5 H5 E4 S5 R5 V4 */
+.root {
+    -color-ink: #14211f;
+    -color-muted: #60706c;
+    -color-canvas: #f8f6ef;
+    -color-surface: #ffffff;
+    -color-line: #e8dfc9;
+    -color-primary: #f4bd3a;
+    -color-primary-hover: #e2a91f;
+    -color-primary-soft: #fff2c4;
+    -color-primary-ink: #3b2a05;
+    -color-focus: #976100;
+    -color-accent: #0369a1;
+    -color-success: #16845b;
+    -color-warning: #a15c07;
+    -color-danger: #c83a3a;
+    -fx-font-family: "Microsoft YaHei UI";
+    -fx-font-size: 13px;
+    -fx-text-fill: -color-ink;
+    -fx-background-color: -color-canvas;
+}
+.text { -fx-font-smoothing-type: lcd; }
+
+.app-shell { -fx-background-color: -color-canvas; }
+.topbar { -fx-background-color: -color-surface; -fx-border-color: transparent transparent -color-line transparent; }
+.brand-icon { -fx-background-radius: 12; }
+.brand-title, .page-title { -fx-font-family: "Microsoft YaHei UI"; -fx-font-weight: normal; -fx-text-fill: -color-ink; }
+.brand-title { -fx-font-size: 22px; }
+.page-title { -fx-font-size: 28px; }
+.eyebrow { -fx-font-size: 10px; -fx-font-weight: normal; -fx-text-fill: -color-focus; -fx-letter-spacing: 1.5px; }
+.page-subtitle, .muted-text, .nav-subtitle, .metric-label { -fx-text-fill: -color-muted; }
+.page-subtitle { -fx-font-size: 14px; }
+
+.sidebar { -fx-background-color: #f5c451; }
+.sidebar .nav-item {
+    -fx-min-height: 76;
+    -fx-padding: 13 12 13 12;
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+.sidebar .nav-item:hover { -fx-background-color: rgba(255, 240, 189, 0.58); }
+.sidebar .nav-item-active { -fx-background-color: #fff0bd; }
+.sidebar .nav-item-complete .nav-index { -fx-text-fill: -color-success; }
+.sidebar .nav-item:disabled { -fx-opacity: 0.50; -fx-cursor: default; }
+.nav-index { -fx-text-fill: #805400; -fx-font-family: "Microsoft YaHei UI"; -fx-font-size: 12px; -fx-font-weight: normal; }
+.nav-title { -fx-text-fill: #2c2618; -fx-font-weight: normal; }
+.nav-subtitle { -fx-font-size: 11px; }
+.sidebar .nav-subtitle { -fx-text-fill: #665b3d; }
+
+.content-area { -fx-background-color: -color-canvas; }
+.content-scroll {
+    -fx-background-color: -color-canvas;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+.content-scroll > .viewport { -fx-background-color: -color-canvas; }
+.content-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12;
+    -fx-padding: 2;
+}
+.content-scroll .scroll-bar:vertical .track {
+    -fx-background-color: #f2ead7;
+    -fx-background-radius: 999;
+}
+.content-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: -color-primary;
+    -fx-background-radius: 999;
+}
+.content-scroll .scroll-bar:vertical .thumb:hover { -fx-background-color: -color-primary-hover; }
+.card, .metric-card, .hero-card, .note-card, .rule-panel {
+    -fx-background-color: -color-surface;
+    -fx-background-radius: 14;
+    -fx-border-color: -color-line;
+    -fx-border-radius: 14;
+}
+.card { -fx-padding: 20; }
+.metric-card { -fx-padding: 16; }
+.hero-card { -fx-padding: 24; -fx-border-color: #ead18b; -fx-effect: dropshadow(gaussian, rgba(89,61,12,0.10), 18, 0.12, 0, 5); }
+.note-card { -fx-padding: 14 16 14 16; }
+.source-guide {
+    -fx-padding: 12 14 12 14;
+    -fx-background-color: #fff8df;
+    -fx-background-radius: 10;
+    -fx-border-color: #ead18b;
+    -fx-border-radius: 10;
+}
+.guide-title { -fx-font-weight: normal; -fx-text-fill: -color-primary-ink; }
+.guide-emphasis { -fx-text-fill: -color-focus; -fx-font-weight: normal; }
+.rule-panel { -fx-padding: 20; -fx-background-color: #edf8f6; -fx-border-color: #c9e8e2; }
+.card-title { -fx-font-family: "Microsoft YaHei UI"; -fx-font-size: 16px; -fx-font-weight: normal; -fx-text-fill: -color-ink; }
+.metric-label, .form-label { -fx-font-size: 11px; -fx-font-weight: normal; }
+.metric-value { -fx-font-size: 15px; -fx-font-weight: normal; -fx-text-fill: -color-ink; }
+.inline-value { -fx-text-fill: -color-ink; -fx-font-weight: normal; }
+.info-mark { -fx-min-width: 24; -fx-min-height: 24; -fx-alignment: center; -fx-background-color: -color-primary-soft; -fx-background-radius: 12; -fx-text-fill: -color-focus; -fx-font-weight: normal; }
+
+.status-pill, .accent-tag, .kind-badge, .locked-value {
+    -fx-padding: 6 11 6 11;
+    -fx-background-radius: 999;
+    -fx-font-size: 11px;
+    -fx-font-weight: normal;
+}
+.status-warn { -fx-background-color: #fff1d5; -fx-text-fill: -color-warning; }
+.status-ok { -fx-background-color: #dff6e9; -fx-text-fill: -color-success; }
+.accent-tag { -fx-background-color: -color-primary-soft; -fx-text-fill: -color-focus; }
+.kind-frontend { -fx-background-color: #e4f2ff; -fx-text-fill: -color-accent; }
+.kind-backend { -fx-background-color: #e7f7ef; -fx-text-fill: -color-success; }
+.locked-value { -fx-background-color: -color-surface; -fx-text-fill: -color-focus; -fx-font-family: "Cascadia Mono"; }
+
+.button { -fx-min-height: 40; -fx-padding: 0 16 0 16; -fx-background-radius: 9; -fx-border-radius: 9; -fx-font-weight: normal; -fx-cursor: hand; }
+.button-primary { -fx-background-color: -color-primary; -fx-text-fill: -color-primary-ink; }
+.button-primary:hover { -fx-background-color: -color-primary-hover; }
+.button-secondary { -fx-background-color: -color-surface; -fx-text-fill: -color-ink; -fx-border-color: -color-line; }
+.button-secondary:hover { -fx-background-color: -color-primary-soft; -fx-border-color: #d7b65b; }
+.button-quiet { -fx-background-color: transparent; -fx-text-fill: -color-muted; }
+.button:focused, .text-field:focused, .password-field:focused, .text-area:focused, .combo-box:focused, .check-box:focused .box, .list-view:focused {
+    -fx-border-color: -color-focus;
+    -fx-border-width: 2;
+}
+.button:disabled { -fx-opacity: 0.52; -fx-cursor: default; }
+
+.text-field, .password-field, .text-area {
+    -fx-min-height: 40;
+    -fx-background-color: -color-surface;
+    -fx-background-radius: 8;
+    -fx-border-color: -color-line;
+    -fx-border-radius: 8;
+    -fx-padding: 0 12 0 12;
+}
+.text-area { -fx-padding: 6; -fx-font-family: "Cascadia Mono"; -fx-font-size: 11px; }
+.combo-box {
+    -fx-min-height: 40;
+    -fx-background-color: -color-surface;
+    -fx-background-radius: 8;
+    -fx-border-color: -color-line;
+    -fx-border-radius: 8;
+}
+.storage-chip {
+    -fx-padding: 5 8 5 8;
+    -fx-background-color: -color-primary-soft;
+    -fx-background-radius: 7;
+    -fx-text-fill: -color-primary-ink;
+    -fx-font-size: 10px;
+    -fx-font-weight: normal;
+}
+.progress-bar { -fx-pref-height: 8; }
+.progress-bar .track { -fx-background-color: #e1ebe8; -fx-background-radius: 999; }
+.progress-bar .bar { -fx-background-color: -color-primary; -fx-background-radius: 999; -fx-padding: 4; }
+.job-list { -fx-background-color: #f7faf9; -fx-border-color: -color-line; -fx-border-radius: 10; -fx-background-radius: 10; }
+.job-list .list-cell { -fx-padding: 11 12 11 12; -fx-background-color: transparent; -fx-text-fill: -color-ink; }
+.job-list .list-cell:filled:selected { -fx-background-color: -color-primary-soft; -fx-text-fill: -color-primary-ink; }
+.runtime-card { -fx-min-width: 360; }
+.runtime-list {
+    -fx-background-color: #f7faf9;
+    -fx-border-color: -color-line;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+.runtime-list .list-cell {
+    -fx-padding: 12 14 12 14;
+    -fx-background-color: transparent;
+    -fx-text-fill: -color-ink;
+}
+.runtime-list .list-cell:filled:selected { -fx-background-color: -color-primary-soft; }
+.runtime-name { -fx-font-weight: normal; -fx-text-fill: -color-ink; }
+.runtime-detail { -fx-font-size: 11px; -fx-text-fill: -color-muted; }
+.runtime-running { -fx-text-fill: -color-success; -fx-font-weight: normal; }
+.runtime-stopped { -fx-text-fill: -color-danger; -fx-font-weight: normal; }
+.runtime-unknown { -fx-text-fill: -color-warning; -fx-font-weight: normal; }
+.button-danger { -fx-text-fill: -color-danger; }
+.button-danger:hover { -fx-background-color: #fff0ef; -fx-border-color: #e7aaa6; }
+.titled-pane > .title { -fx-background-color: #f5f8f7; -fx-background-radius: 8; -fx-border-color: -color-line; -fx-border-radius: 8; }
+.advanced-grid { -fx-padding: 16 0 0 0; }
+.deployment-settings {
+    -fx-padding: 15;
+    -fx-background-color: #fffaf0;
+    -fx-background-radius: 11;
+    -fx-border-color: #ead9ad;
+    -fx-border-radius: 11;
+}
+.deployment-option-card {
+    -fx-padding: 13;
+    -fx-background-color: -color-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -color-line;
+    -fx-border-radius: 10;
+}
+.auto-value { -fx-text-fill: -color-focus; -fx-font-weight: normal; }
+.port-status { -fx-font-size: 12px; -fx-font-weight: normal; }
+.port-status-available { -fx-text-fill: -color-success; }
+.port-status-occupied { -fx-text-fill: -color-danger; }
+.port-status-neutral { -fx-text-fill: -color-muted; }
+.footer-bar { -fx-background-color: -color-surface; -fx-border-color: -color-line transparent transparent transparent; }
+.footer-status { -fx-text-fill: -color-muted; }
+
+.assistant-dialog {
+    -fx-background-color: -color-canvas;
+    -fx-padding: 0;
+}
+.assistant-dialog > .content.label { -fx-padding: 0; }
+.assistant-dialog > .button-bar > .container {
+    -fx-background-color: -color-surface;
+    -fx-border-color: -color-line transparent transparent transparent;
+    -fx-padding: 14 18 14 18;
+}
+.dialog-content {
+    -fx-background-color: -color-surface;
+    -fx-padding: 22 24 20 24;
+}
+.dialog-kicker {
+    -fx-background-color: -color-primary-soft;
+    -fx-background-radius: 999;
+    -fx-padding: 5 10 5 10;
+    -fx-text-fill: -color-focus;
+    -fx-font-size: 11px;
+    -fx-font-weight: normal;
+    -fx-max-width: 72;
+}
+.dialog-title {
+    -fx-font-family: "Microsoft YaHei UI";
+    -fx-font-size: 20px;
+    -fx-font-weight: normal;
+    -fx-text-fill: -color-ink;
+}
+.dialog-message {
+    -fx-font-size: 13px;
+    -fx-line-spacing: 3px;
+    -fx-text-fill: -color-ink;
+}
+.dialog-help {
+    -fx-background-color: -color-primary-soft;
+    -fx-background-radius: 10;
+    -fx-border-color: #ead18b;
+    -fx-border-radius: 10;
+    -fx-padding: 12 14 12 14;
+    -fx-text-fill: -color-primary-ink;
+}

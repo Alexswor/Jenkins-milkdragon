@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="cn.localops.jda.ui.MainController" styleClass="app-shell">
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="18" styleClass="topbar">
+            <padding><Insets top="18" right="28" bottom="18" left="28"/></padding>
+            <ImageView fitWidth="44" fitHeight="44" preserveRatio="true" smooth="true" styleClass="brand-icon">
+                <image><Image url="@../icons/brand-mascot.jpg"/></image>
+            </ImageView>
+            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                <Label text="JENKINS DEPLOY DESK" styleClass="eyebrow"/>
+                <Label text="一键部署助手" styleClass="brand-title"/>
+            </VBox>
+            <Label fx:id="headerStatus" text="Agent 待检测" styleClass="status-pill,status-warn"/>
+            <Button text="连接设置" onAction="#handleConnectionSettings" styleClass="button-secondary"/>
+        </HBox>
+    </top>
+    <left>
+        <VBox prefWidth="220" spacing="12" styleClass="sidebar">
+            <padding><Insets top="30" right="20" bottom="24" left="20"/></padding>
+            <VBox spacing="10">
+                <Button fx:id="navDashboardButton" onAction="#handleShowDashboard" maxWidth="1.7976931348623157E308"
+                        contentDisplay="GRAPHIC_ONLY" alignment="CENTER_LEFT" styleClass="nav-item">
+                    <graphic>
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="◆" styleClass="nav-index"/>
+                            <VBox><Label text="服务看板" styleClass="nav-title"/><Label text="本机部署状态" styleClass="nav-subtitle"/></VBox>
+                        </HBox>
+                    </graphic>
+                </Button>
+                <Button fx:id="navStepOneButton" onAction="#handleShowAgentStep" maxWidth="1.7976931348623157E308"
+                        contentDisplay="GRAPHIC_ONLY" alignment="CENTER_LEFT" styleClass="nav-item,nav-item-active">
+                    <graphic>
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="01" styleClass="nav-index"/>
+                            <VBox><Label text="连接本机" styleClass="nav-title"/><Label text="Agent 自动配置" styleClass="nav-subtitle"/></VBox>
+                        </HBox>
+                    </graphic>
+                </Button>
+                <Button fx:id="navStepTwoButton" onAction="#handleShowProjectStep" maxWidth="1.7976931348623157E308"
+                        contentDisplay="GRAPHIC_ONLY" alignment="CENTER_LEFT" disable="true" styleClass="nav-item">
+                    <graphic>
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="02" styleClass="nav-index"/>
+                            <VBox><Label text="选择项目" styleClass="nav-title"/><Label text="自动识别前后端" styleClass="nav-subtitle"/></VBox>
+                        </HBox>
+                    </graphic>
+                </Button>
+                <Button fx:id="navStepThreeButton" onAction="#handleShowDeploymentStep" maxWidth="1.7976931348623157E308"
+                        contentDisplay="GRAPHIC_ONLY" alignment="CENTER_LEFT" disable="true" styleClass="nav-item">
+                    <graphic>
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="03" styleClass="nav-index"/>
+                            <VBox><Label text="创建部署" styleClass="nav-title"/><Label text="前后端独立 Job" styleClass="nav-subtitle"/></VBox>
+                        </HBox>
+                    </graphic>
+                </Button>
+            </VBox>
+        </VBox>
+    </left>
+    <center>
+        <ScrollPane fx:id="contentScrollPane" fitToWidth="true" focusTraversable="true"
+                    hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="content-scroll">
+            <content>
+                <StackPane styleClass="content-area">
+                    <padding><Insets top="30" right="34" bottom="24" left="34"/></padding>
+            <VBox fx:id="dashboardPane" spacing="20" visible="false" managed="false">
+                <HBox alignment="CENTER_LEFT" spacing="18">
+                    <VBox spacing="7" HBox.hgrow="ALWAYS">
+                        <Label text="本机服务看板" styleClass="page-title"/>
+                        <Label text="仅显示由本软件管理的后端 Windows 服务和前端 IIS 站点。" styleClass="page-subtitle"/>
+                    </VBox>
+                    <Button fx:id="refreshDashboardButton" text="刷新状态" onAction="#handleRefreshDashboard" styleClass="button-secondary"/>
+                </HBox>
+                <GridPane hgap="12" vgap="12">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="33.33"/>
+                        <ColumnConstraints percentWidth="33.33"/>
+                        <ColumnConstraints percentWidth="33.34"/>
+                    </columnConstraints>
+                    <VBox GridPane.columnIndex="0" styleClass="metric-card" spacing="7"><Label text="后端服务" styleClass="metric-label"/><Label fx:id="dashboardBackendCountLabel" text="0" styleClass="metric-value"/></VBox>
+                    <VBox GridPane.columnIndex="1" styleClass="metric-card" spacing="7"><Label text="IIS 站点" styleClass="metric-label"/><Label fx:id="dashboardFrontendCountLabel" text="0" styleClass="metric-value"/></VBox>
+                    <VBox GridPane.columnIndex="2" styleClass="metric-card" spacing="7"><Label text="正在运行" styleClass="metric-label"/><Label fx:id="dashboardRunningCountLabel" text="0" styleClass="metric-value"/></VBox>
+                </GridPane>
+                <HBox spacing="18" VBox.vgrow="ALWAYS">
+                    <VBox spacing="12" styleClass="card,runtime-card" HBox.hgrow="ALWAYS">
+                        <Label text="后端 Windows 服务" styleClass="card-title"/>
+                        <ListView fx:id="backendRuntimeList" prefHeight="310" styleClass="runtime-list" VBox.vgrow="ALWAYS">
+                            <contextMenu>
+                                <ContextMenu>
+                                    <items>
+                                        <MenuItem text="重命名显示名称" onAction="#handleRenameBackend"/>
+                                    </items>
+                                </ContextMenu>
+                            </contextMenu>
+                        </ListView>
+                        <HBox spacing="10">
+                            <Button fx:id="startBackendButton" text="启动并允许自启" onAction="#handleStartBackend" styleClass="button-primary" disable="true"/>
+                            <Button fx:id="stopBackendButton" text="停止并禁止自启" onAction="#handleStopBackend" styleClass="button-secondary,button-danger" disable="true"/>
+                            <Button fx:id="deleteBackendButton" text="删除服务" onAction="#handleDeleteBackend" styleClass="button-secondary,button-danger" disable="true"/>
+                        </HBox>
+                    </VBox>
+                    <VBox spacing="12" styleClass="card,runtime-card" HBox.hgrow="ALWAYS">
+                        <Label text="前端 IIS 站点" styleClass="card-title"/>
+                        <ListView fx:id="frontendRuntimeList" prefHeight="310" styleClass="runtime-list" VBox.vgrow="ALWAYS"/>
+                        <HBox spacing="10">
+                            <Button fx:id="startFrontendButton" text="启动并允许自启" onAction="#handleStartFrontend" styleClass="button-primary" disable="true"/>
+                            <Button fx:id="stopFrontendButton" text="停止并禁止自启" onAction="#handleStopFrontend" styleClass="button-secondary,button-danger" disable="true"/>
+                            <Button fx:id="deleteFrontendButton" text="删除站点" onAction="#handleDeleteFrontend" styleClass="button-secondary,button-danger" disable="true"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+                <HBox spacing="12" alignment="CENTER_LEFT" styleClass="note-card">
+                    <Label text="i" styleClass="info-mark"/>
+                    <Label text="手动停止会同时禁止系统自启；只有在看板中手动启动后才会恢复自动启动。删除只移除系统注册，不删除生产文件；后端服务可右键重命名显示名称。所有操作均需要管理员权限。" wrapText="true" styleClass="muted-text"/>
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="onboardingPane" spacing="22">
+                <VBox spacing="7">
+                    <Label text="先把这台服务器连到 Jenkins" styleClass="page-title"/>
+                    <Label text="软件会检测环境、配置 Agent 并验证在线，整个过程只需点击一次。" styleClass="page-subtitle"/>
+                </VBox>
+                <GridPane hgap="12" vgap="12">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="25"/>
+                        <ColumnConstraints percentWidth="25"/>
+                        <ColumnConstraints percentWidth="25"/>
+                        <ColumnConstraints percentWidth="25"/>
+                    </columnConstraints>
+                    <VBox GridPane.columnIndex="0" styleClass="metric-card" spacing="7"><Label text="主机名" styleClass="metric-label"/><Label fx:id="hostNameLabel" text="检测中" styleClass="metric-value"/></VBox>
+                    <VBox GridPane.columnIndex="1" styleClass="metric-card" spacing="7"><Label text="Windows" styleClass="metric-label"/><Label fx:id="osLabel" text="检测中" styleClass="metric-value" wrapText="true"/></VBox>
+                    <VBox GridPane.columnIndex="2" styleClass="metric-card" spacing="7"><Label text="CPU 架构" styleClass="metric-label"/><Label fx:id="architectureLabel" text="检测中" styleClass="metric-value"/></VBox>
+                    <VBox GridPane.columnIndex="3" styleClass="metric-card" spacing="7">
+                        <Label text="全部硬盘" styleClass="metric-label"/>
+                        <FlowPane fx:id="diskListPane" hgap="6" vgap="6"><Label text="检测中" styleClass="metric-value"/></FlowPane>
+                    </VBox>
+                </GridPane>
+                <VBox spacing="18" styleClass="hero-card">
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label fx:id="currentStepTitle" text="正在检测本机环境" styleClass="card-title"/>
+                            <Label fx:id="currentStepDetail" text="通常只需几秒" styleClass="muted-text"/>
+                        </VBox>
+                        <Label text="自动完成" styleClass="accent-tag"/>
+                    </HBox>
+                    <ProgressBar fx:id="setupProgress" progress="-1" maxWidth="1.7976931348623157E308"/>
+                    <GridPane hgap="18" vgap="10">
+                        <Label text="Jenkins 连接" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <Label fx:id="connectionLabel" text="检测中" styleClass="inline-value" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                        <Label text="Agent 名称" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <Label fx:id="agentNameLabel" text="将自动生成" styleClass="inline-value" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                        <Label text="Agent 安装盘" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <VBox spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                            <ComboBox fx:id="installDriveComboBox" promptText="请选择安装磁盘" maxWidth="420" onAction="#handleInstallDriveChanged"/>
+                            <Label fx:id="installPathLabel" text="尚未选择，不会默认安装到 C 盘" styleClass="muted-text" wrapText="true"/>
+                        </VBox>
+                    </GridPane>
+                    <HBox spacing="12">
+                        <Button fx:id="provisionButton" text="一键配置本机 Agent" onAction="#handleProvisionAgent" styleClass="button-primary"/>
+                        <Button fx:id="retryButton" text="重试检测" onAction="#handleRetry" styleClass="button-secondary" visible="false" managed="false"/>
+                    </HBox>
+                </VBox>
+                <HBox spacing="12" alignment="CENTER_LEFT" styleClass="note-card">
+                    <Label text="i" styleClass="info-mark"/>
+                    <Label text="安装 Windows 服务时会使用管理员权限；完成后日常操作不需要一直以管理员身份运行。" wrapText="true" styleClass="muted-text"/>
+                </HBox>
+            </VBox>
+
+            <VBox fx:id="projectPane" spacing="20" visible="false" managed="false">
+                <HBox alignment="CENTER_LEFT" spacing="18">
+                    <VBox spacing="7" HBox.hgrow="ALWAYS">
+                        <Label text="选择项目源码" styleClass="page-title"/>
+                        <Label text="选择源码根目录，软件会自动识别前端和后端。" styleClass="page-subtitle"/>
+                    </VBox>
+                    <Label text="本机 Agent 已就绪" styleClass="status-pill,status-ok"/>
+                </HBox>
+                <VBox spacing="14" styleClass="card">
+                    <Label text="1  选择项目目录" styleClass="card-title"/>
+                    <HBox spacing="10">
+                        <TextField fx:id="projectPathField" promptText="请选择包含源码的项目根目录" editable="false" HBox.hgrow="ALWAYS"/>
+                        <Button text="选择目录" onAction="#handleChooseProject" styleClass="button-primary"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="TOP_LEFT" styleClass="source-guide">
+                        <Label text="i" styleClass="info-mark"/>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="请选择源码根目录（不是 dist、JAR 或 DLL 成品目录）" styleClass="guide-title"/>
+                            <Label text="前端需要 package.json；后端需要 pom.xml、build.gradle、build.gradle.kts、.sln 或 .csproj。软件会自动扫描根目录及其一级子文件夹。" wrapText="true" styleClass="muted-text"/>
+                            <Label text="创建 Job 后，Jenkins 会从 Gerrit 的 dev 分支重新拉取并编译。" wrapText="true" styleClass="guide-emphasis"/>
+                        </VBox>
+                    </HBox>
+                    <GridPane hgap="12" vgap="10">
+                        <Label text="前端" styleClass="kind-badge,kind-frontend" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <Label fx:id="frontendResultLabel" text="待识别" styleClass="inline-value" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                        <Label text="后端" styleClass="kind-badge,kind-backend" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <Label fx:id="backendResultLabel" text="待识别" styleClass="inline-value" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    </GridPane>
+                    <Label text="识别成功后会记住此目录；下次启动将自动恢复并进入“创建部署”步骤。" styleClass="guide-emphasis"/>
+                </VBox>
+            </VBox>
+
+            <VBox fx:id="deploymentPane" spacing="20" visible="false" managed="false">
+                <HBox alignment="CENTER_LEFT" spacing="18">
+                    <VBox spacing="7" HBox.hgrow="ALWAYS">
+                        <Label text="创建 Jenkins 部署" styleClass="page-title"/>
+                        <Label fx:id="deploymentProjectSummaryLabel" text="请先完成项目识别" styleClass="page-subtitle"/>
+                    </VBox>
+                    <Label text="第 3 步" styleClass="status-pill,status-warn"/>
+                </HBox>
+                <HBox spacing="18">
+                    <VBox spacing="13" styleClass="card" HBox.hgrow="ALWAYS">
+                        <Label text="1  部署信息" styleClass="card-title"/>
+                        <GridPane hgap="12" vgap="10">
+                            <Label text="Gerrit 项目名" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                            <TextField fx:id="gerritProjectField" promptText="输入项目名后自动识别" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                            <Label fx:id="gerritProjectStatusLabel" text="输入项目名后自动查询固定 Gerrit" styleClass="muted-text" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                            <Label text="仓库地址" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                            <TextField fx:id="repositoryUrlField" promptText="识别成功后自动填写" editable="false" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                            <Label text="生产根目录" styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                            <HBox spacing="10" GridPane.rowIndex="3" GridPane.columnIndex="1">
+                                <TextField fx:id="productionRootField" promptText="请选择文件夹放置生产文件" editable="false" HBox.hgrow="ALWAYS"/>
+                                <Button text="选择文件夹" onAction="#handleChooseProductionRoot" styleClass="button-secondary"/>
+                            </HBox>
+                        </GridPane>
+                        <VBox spacing="12" styleClass="deployment-settings">
+                            <Label text="自动部署设置" styleClass="card-title"/>
+                            <Label fx:id="deploymentDetectionSummary" text="选择源码后自动识别部署方式、后端端口和健康检查。" styleClass="muted-text" wrapText="true"/>
+                            <HBox spacing="12">
+                                <VBox fx:id="frontendDeploymentOptions" spacing="8" styleClass="deployment-option-card" HBox.hgrow="ALWAYS">
+                                    <Label text="前端发布" styleClass="guide-title"/>
+                                    <ComboBox fx:id="frontendDeploymentModeComboBox" onAction="#handleFrontendDeploymentModeChanged" maxWidth="1.7976931348623157E308"/>
+                                    <VBox fx:id="iisSiteOptions" spacing="5" visible="false" managed="false">
+                                        <Label text="IIS 站点名" styleClass="metric-label"/>
+                                        <TextField fx:id="iisSiteNameField" promptText="仅 IIS 部署需要"/>
+                                        <Label text="前端端口" styleClass="metric-label"/>
+                                        <TextField fx:id="frontendPortField" promptText="80" prefWidth="110"/>
+                                        <Label fx:id="frontendPortStatusLabel" text="请输入前端端口" styleClass="port-status,port-status-neutral" wrapText="true"/>
+                                    </VBox>
+                                </VBox>
+                                <VBox fx:id="backendDeploymentOptions" spacing="8" styleClass="deployment-option-card" HBox.hgrow="ALWAYS">
+                                    <Label text="后端服务" styleClass="guide-title"/>
+                                    <HBox alignment="CENTER_LEFT" spacing="10">
+                                        <Label text="端口" styleClass="metric-label"/>
+                                        <TextField fx:id="backendPortField" promptText="8080" prefWidth="110"/>
+                                    </HBox>
+                                    <Label fx:id="backendServiceNameLabel" text="服务名称将按项目自动生成" styleClass="auto-value" wrapText="true"/>
+                                    <Label fx:id="backendPortStatusLabel" text="请输入后端端口" styleClass="port-status,port-status-neutral" wrapText="true"/>
+                                </VBox>
+                            </HBox>
+                            <HBox spacing="10" alignment="TOP_LEFT" styleClass="source-guide">
+                                <Label text="i" styleClass="info-mark"/>
+                                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                    <Label fx:id="reverseProxyHintLabel" text="生产环境反向代理信息会在识别项目后显示。" styleClass="guide-title" wrapText="true"/>
+                                    <Label text="Vite 的 server.proxy 只在开发时生效；生产环境仍由 Nginx 或 IIS 转发接口请求。" styleClass="muted-text" wrapText="true"/>
+                                </VBox>
+                            </HBox>
+                            <VBox fx:id="productionConfigOptions" spacing="9" styleClass="deployment-option-card">
+                                <Label text="生产环境配置（仅 Java / Spring 后端必填）" styleClass="guide-title"/>
+                                <GridPane hgap="12" vgap="9">
+                                    <Label text="数据库连接地址" styleClass="metric-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                    <VBox spacing="4" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                                        <TextField fx:id="databaseUrlField" promptText="IP:端口，或完整 JDBC 地址"/>
+                                        <Label fx:id="databaseUrlHintLabel" text="识别项目后，可自动复用源码中的数据库类型和库名。" styleClass="muted-text" wrapText="true"/>
+                                    </VBox>
+                                    <Label text="数据库用户名" styleClass="metric-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                    <TextField fx:id="databaseUsernameField" promptText="生产数据库用户名" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                    <Label text="数据库密码" styleClass="metric-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                    <PasswordField fx:id="databasePasswordField" promptText="生产数据库密码" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                                    <Label text="JWT 密钥（可选）" styleClass="metric-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                    <PasswordField fx:id="jwtSecretField" promptText="非必填项" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                                </GridPane>
+                                <Label text="已有 application-prod.yml 会先备份到 backups/config，再原子替换。" styleClass="guide-emphasis" wrapText="true"/>
+                            </VBox>
+                            <TitledPane text="自定义 Jenkins Pipeline（高级，可选）" expanded="false">
+                                <content>
+                                    <VBox spacing="9" styleClass="advanced-grid">
+                                        <CheckBox fx:id="customPipelineCheckBox" text="使用自定义脚本替代内置模板" onAction="#handleCustomPipelineChanged"/>
+                                        <Label text="自定义脚本会以 Jenkins Agent 服务权限执行。只粘贴经过审核的完整 pipeline { ... }。" wrapText="true" styleClass="guide-emphasis"/>
+                                        <VBox fx:id="customPipelineOptions" spacing="8" visible="false" managed="false">
+                                            <Label text="前端 Pipeline" styleClass="metric-label"/>
+                                            <TextArea fx:id="customFrontendPipelineArea" promptText="可选：粘贴完整前端 Pipeline" prefRowCount="6" wrapText="false"/>
+                                            <Label text="后端 Pipeline" styleClass="metric-label"/>
+                                            <TextArea fx:id="customBackendPipelineArea" promptText="可选：粘贴完整后端 Pipeline" prefRowCount="6" wrapText="false"/>
+                                        </VBox>
+                                    </VBox>
+                                </content>
+                            </TitledPane>
+                        </VBox>
+                    </VBox>
+                    <VBox spacing="11" styleClass="rule-panel" prefWidth="300">
+                        <Label text="触发规则" styleClass="card-title"/>
+                        <Label text="默认值已按当前部署方式填写，修改后会同步到 Jenkins Job。" styleClass="muted-text" wrapText="true"/>
+                        <VBox spacing="5">
+                            <Label text="事件" styleClass="metric-label"/>
+                            <ComboBox fx:id="triggerEventComboBox" maxWidth="1.7976931348623157E308"/>
+                        </VBox>
+                        <VBox spacing="5">
+                            <Label text="分支匹配方式" styleClass="metric-label"/>
+                            <ComboBox fx:id="branchMatchTypeComboBox" maxWidth="1.7976931348623157E308"/>
+                        </VBox>
+                        <VBox spacing="5">
+                            <Label text="分支规则" styleClass="metric-label"/>
+                            <TextField fx:id="branchPatternField" promptText="refs/heads/dev"/>
+                        </VBox>
+                        <CheckBox fx:id="scmPollingCheckBox" text="启用 SCM 轮询" onAction="#handleScmPollingChanged"/>
+                        <VBox fx:id="scmPollingOptions" spacing="5" visible="false" managed="false">
+                            <Label text="轮询计划（Jenkins cron）" styleClass="metric-label"/>
+                            <TextField fx:id="scmPollingScheduleField" promptText="H/5 * * * *"/>
+                        </VBox>
+                    </VBox>
+                </HBox>
+                <VBox spacing="11" styleClass="card" VBox.vgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT"><Label text="2  预览并自动部署" styleClass="card-title" HBox.hgrow="ALWAYS"/><Button fx:id="previewButton" text="生成预览" onAction="#handlePreviewJobs" styleClass="button-secondary"/></HBox>
+                    <ListView fx:id="jobPreviewList" prefHeight="116" VBox.vgrow="ALWAYS" styleClass="job-list"/>
+                    <VBox fx:id="deploymentProgressPane" spacing="6" visible="false" managed="false">
+                        <Label fx:id="deploymentProgressLabel" text="准备自动部署…" styleClass="guide-title"/>
+                        <ProgressBar fx:id="deploymentProgressBar" progress="0" maxWidth="1.7976931348623157E308"/>
+                    </VBox>
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <CheckBox fx:id="confirmationCheckBox" text="我已确认项目名、生产目录、生产配置、服务信息和触发规则" onAction="#handleConfirmationChanged" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="applyButton" text="创建 / 继续部署" onAction="#handleApplyJobs" disable="true" styleClass="button-primary"/>
+                    </HBox>
+                </VBox>
+                    </VBox>
+                </StackPane>
+            </content>
+        </ScrollPane>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER_LEFT" spacing="14" styleClass="footer-bar">
+            <padding><Insets top="12" right="26" bottom="12" left="26"/></padding>
+            <Label fx:id="footerStatus" text="准备中…" styleClass="footer-status" HBox.hgrow="ALWAYS"/>
+            <Button text="导出诊断" onAction="#handleExportDiagnostics" styleClass="button-quiet"/>
+        </HBox>
+    </bottom>
+</BorderPane>

@@ -1,0 +1,19 @@
+Jenkins classic headshot artwork
+
+Attribution: Jenkins project, https://www.jenkins.io/
+Original Jenkins logo design: Frontside (https://frontside.com/).
+
+Vector source (Jenkins official repository):
+https://github.com/jenkinsci/jenkins/blob/master/war/src/main/webapp/images/svgs/headshot.svg
+https://raw.githubusercontent.com/jenkinsci/jenkins/master/war/src/main/webapp/images/svgs/headshot.svg
+
+Artwork and license information:
+https://www.jenkins.io/artwork/
+
+The Jenkins logo artwork is licensed under Creative Commons
+Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0):
+https://creativecommons.org/licenses/by-sa/3.0/
+
+Application icon preparation: transparent padding, scaling and PNG/ICO format
+conversion only. No AI generation or redraw. The original artwork and these
+derived icon files retain the CC BY-SA 3.0 license.

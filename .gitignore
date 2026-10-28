@@ -1,0 +1,16 @@
+target/
+dist/
+.idea/
+.vscode/
+*.iml
+*.log
+config.env
+.env
+.env.*
+!.env.example
+diagnostics/
+job-backups/
+账号密码.txt
+.ai-memory/
+worktrees/
+.codex-prod-config/
